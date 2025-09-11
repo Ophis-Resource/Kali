@@ -191,10 +191,13 @@ echo
 echo "🛡️ Rules applied from: $RULES_DIR/main.conf"
 echo
 echo "#######################################################"
-
 SCRIPT_END_TIME=$(date +%s)
 TOTAL_TIME=$((SCRIPT_END_TIME - SCRIPT_START_TIME))
 echo
 echo "🎉 Script completed in $TOTAL_TIME seconds."
-echo
+echo "#######################################################"
+echo "make sure to add these 2 lines in the server block after server name in default.conf of nginx"
+echo "#######################################################"
+echo "modsecurity on;"
+echo "modsecurity_rules_file /home/ubuntu/ModSecurity/rules/main.conf;"
 echo "#######################################################"
