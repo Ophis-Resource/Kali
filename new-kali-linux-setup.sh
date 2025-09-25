@@ -17,13 +17,13 @@ echo "'kaliup' command created successfully!"
 # Update sources.list
 echo "################################################################################################"
 echo "Updating sources.list..."
-#sudo bash -c 'cat > /etc/apt/sources.list << EOF
+sudo bash -c 'cat > /etc/apt/sources.list << EOF
 # Kali Linux Rolling Repository
-#deb http://ftp.acc.umu.se/mirror/kali.org/kali kali-rolling main contrib non-free non-free-firmware
-#deb-src http://ftp.acc.umu.se/mirror/kali.org/kali kali-rolling main contrib non-free non-free-firmware
-#deb http://kali.download/kali kali-rolling main contrib non-free non-free-firmware
-#deb-src http://kali.download/kali kali-rolling main contrib non-free non-free-firmware
-#EOF'
+deb http://ftp.acc.umu.se/mirror/kali.org/kali kali-rolling main contrib non-free non-free-firmware
+deb-src http://ftp.acc.umu.se/mirror/kali.org/kali kali-rolling main contrib non-free non-free-firmware
+deb http://kali.download/kali kali-rolling main contrib non-free non-free-firmware
+deb-src http://kali.download/kali kali-rolling main contrib non-free non-free-firmware
+EOF'
 sudo apt purge spike -y
 
 # Run 'kaliup' command
