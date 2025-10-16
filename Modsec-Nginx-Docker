@@ -1,0 +1,26 @@
+```
+┌──(iamfahadshaikh㉿TTPL-FAHAD)-[~/Modsec]
+└─$ cat Dockerfile
+# Base image: Official NGINX
+FROM nginx:latest
+
+# Install necessary build tools and dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential autoconf automake libtool pkg-config git wget curl \
+    zlib1g-dev libpcre2-dev libxml2-dev libcurl4-openssl-dev liblua5.3-dev \
+    libpcre2-dev libssl-dev libxslt1-dev libgd-dev libgeoip-dev \
+    libperl-dev libmaxminddb-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy and run the ModSecurity install script
+COPY modsecinstall.sh /home/modsecinstall.sh
+
+RUN chmod +x /home/modsecinstall.sh && \
+    /home/modsecinstall.sh
+
+# Optional: expose ports (default NGINX ports)
+EXPOSE 80
+
+# Default command
+CMD ["nginx", "-g", "daemon off;"]
+```
