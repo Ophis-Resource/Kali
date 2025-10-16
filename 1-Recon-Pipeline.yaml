@@ -1,0 +1,134 @@
+trigger:
+  - main
+
+parameters:
+  - name: target
+    type: string
+    default: 'example.com'
+
+variables:
+  projectPath: /home/azureuser/Project_3D_VAPT
+
+stages:
+  # --- Stage 1: Cloning ---
+  - stage: Cloning
+    displayName: "Cloning: Clone Repository"
+    jobs:
+      - deployment: CloneRepo
+        displayName: 'Clone or Update VAPT Repository'
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    cd /home/azureuser
+                    if [ -d "Project_3D_VAPT" ]; then
+                      echo "Repository exists. Pulling latest changes..."
+                      cd Project_3D_VAPT && git reset --hard HEAD && git clean -fdx && git pull
+                    else
+                      echo "Cloning new repository..."
+                      git clone https://dev.azure.com/devsandbox2/Project%203D%20VAPT/_git/Project%203D%20VAPT Project_3D_VAPT
+                    fi
+                  displayName: "Clone or Update Repository"
+                  env:
+                    GIT_CONFIG_PARAMETERS: "'http.https://dev.azure.com.extraheader'='AUTHORIZATION: bearer $(System.AccessToken)'"
+
+  # --- Stage 2: Execution (VAPT Tools) ---
+  - stage: Execution
+    displayName: "Execution: Run Vulnerability & Penetration Tests"
+    jobs:
+      - deployment: WhoisJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x whois_scan_full.sh && ./whois_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run Whois"
+
+      - deployment: DNSEnumJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x dnsenum_scan_full.sh && ./dnsenum_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run DNSEnum"
+
+      - deployment: FindomainJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x findomain_scan_full.sh && ./findomain_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run Findomain"
+
+      - deployment: Sublist3rJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x sublister_scan_full.sh && ./sublister_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run Sublist3r"
+
+      - deployment: TheHarvesterJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x theharvester_scan_full.sh && ./theharvester_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run TheHarvester"
+
+      - deployment: NslookupJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x nslookup_scan_full.sh && ./nslookup_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run Nslookup"
+
+      - deployment: TracerouteJob
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x traceroute_scan_full.sh && ./traceroute_scan_full.sh ${{ parameters.target }}
+                  displayName: "Run Traceroute"
+
+  # --- Stage 3: Documentation ---
+  - stage: Documentation
+    displayName: "Documentation: Collect and Publish Results"
+    jobs:
+      - deployment: CollectAndPublishResults
+        environment: { name: Kali, resourceType: virtualMachine }
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    ARTIFACT_DIR="$(projectPath)/artifact_output"
+                    mkdir -p "$ARTIFACT_DIR"
+                    echo "Collecting all scan results..."
+                    cp $(projectPath)/tools/output/*_output.txt "$ARTIFACT_DIR/" 2>/dev/null || echo "No primary text files."
+                    cp $(projectPath)/tools/output/json/*.json "$ARTIFACT_DIR/" 2>/dev/null || echo "No JSON files."
+                    COMBINED_FILE="$ARTIFACT_DIR/combined_output.txt"
+                    echo "### Combined Output for ${{ parameters.target }}" > "$COMBINED_FILE"
+                    for f in "$ARTIFACT_DIR"/*_output.txt; do
+                      echo -e "\n\n--- START $(basename "$f") ---\n" >> "$COMBINED_FILE"
+                      cat "$f" >> "$COMBINED_FILE"
+                      echo -e "\n--- END $(basename "$f") ---" >> "$COMBINED_FILE"
+                    done
+                  displayName: "Collect and Combine Results"
+                - task: PublishPipelineArtifact@1
+                  inputs:
+                    targetPath: '$(projectPath)/artifact_output'
+                    artifact: 'VAPT-Scan-Results'
+                  displayName: 'Publish Artifact'

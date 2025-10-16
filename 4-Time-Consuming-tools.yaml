@@ -1,0 +1,86 @@
+trigger:
+  - main
+
+parameters:
+  - name: target
+    type: string
+    default: 'example.com'
+
+variables:
+  projectPath: /home/azureuser/Project_3D_VAPT
+
+stages:
+  # --- Stage 1: Cloning ---
+  - stage: Cloning
+    displayName: "Cloning: Clone Repository"
+    jobs:
+      - deployment: CloneRepo
+        displayName: 'Clone or Update VAPT Repository'
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    cd /home/azureuser
+                    if [ -d "Project_3D_VAPT" ]; then
+                      echo "Repository exists. Pulling latest changes..."
+                      cd Project_3D_VAPT && git reset --hard HEAD && git clean -fdx && git pull
+                    else
+                      echo "Cloning new repository..."
+                      git clone https://dev.azure.com/devsandbox2/Project%203D%20VAPT/_git/Project%203D%20VAPT Project_3D_VAPT
+                    fi
+                  displayName: "Clone or Update Repository"
+                  env:
+                    GIT_CONFIG_PARAMETERS: "'http.https://dev.azure.com.extraheader'='AUTHORIZATION: bearer $(System.AccessToken)'"
+
+  # --- Stage 2: Execution (Left-out VAPT Tools) ---
+  - stage: ExecutionLeftOut
+    displayName: "Execution: Run Left-out Vulnerability & Penetration Tests"
+    variables:
+      I_HAVE_AUTHORIZATION: 1
+    jobs:
+      - deployment: DotdotpwnJob
+        environment: 
+          name: Kali
+          resourceType: virtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: cd $(projectPath)/tools && chmod +x dotdotpwn_wrapper.sh && ./dotdotpwn_wrapper.sh ${{ parameters.target }}
+                  displayName: "Run DotDotPwn"
+
+  # --- Stage 3: Documentation ---
+  - stage: Documentation
+    displayName: "Documentation: Collect and Publish Results"
+    jobs:
+      - deployment: CollectAndPublishResults
+        environment: 
+          name: Kali
+          resourceType: virtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    ARTIFACT_DIR="$(projectPath)/artifact_output"
+                    mkdir -p "$ARTIFACT_DIR"
+                    echo "Collecting all scan results..."
+                    cp $(projectPath)/tools/output/*_output.txt "$ARTIFACT_DIR/" 2>/dev/null || echo "No primary text files."
+                    cp $(projectPath)/tools/output/json/*.json "$ARTIFACT_DIR/" 2>/dev/null || echo "No JSON files."
+                    COMBINED_FILE="$ARTIFACT_DIR/combined_output.txt"
+                    echo "### Combined Output for ${{ parameters.target }}" > "$COMBINED_FILE"
+                    for f in "$ARTIFACT_DIR"/*_output.txt; do
+                      echo -e "\n\n--- START $(basename "$f") ---\n" >> "$COMBINED_FILE"
+                      cat "$f" >> "$COMBINED_FILE"
+                      echo -e "\n--- END $(basename "$f") ---" >> "$COMBINED_FILE"
+                    done
+                  displayName: "Collect and Combine Results"
+                - task: PublishPipelineArtifact@1
+                  inputs:
+                    targetPath: '$(projectPath)/artifact_output'
+                    artifact: 'VAPT-Scan-Results'
+                  displayName: 'Publish Artifact'

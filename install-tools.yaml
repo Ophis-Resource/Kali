@@ -1,0 +1,361 @@
+trigger:
+  - main
+
+stages:
+  - stage: InstallTools
+    displayName: "Install Tools on Kali VM"
+    jobs:
+
+      # PREP JOB: update/upgrade once
+      - deployment: Prepare
+        displayName: "Prepare VM (apt update/upgrade)"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Updating APT repositories and upgrading..."
+                    sudo apt update -y
+                    sudo apt-get update -y
+                    sudo apt-get upgrade -y
+                    sudo apt upgrade -y
+                    echo "Prepare step done."
+                  displayName: "APT update & upgrade"
+
+      # Single-package install jobs (each depends on Prepare)
+      - deployment: Install_whois
+        displayName: "Install whois"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install whois -y
+                  displayName: "Install whois"
+
+      - deployment: Install_bind9_dnsutils
+        displayName: "Install bind9-dnsutils"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install bind9-dnsutils -y
+                  displayName: "Install bind9-dnsutils"
+
+      - deployment: Install_nslookup
+        displayName: "Install nslookup (dnsutils)"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install nslookup -y || sudo apt install dnsutils -y
+                  displayName: "Install nslookup/dnsutils"
+
+      - deployment: Install_whatweb
+        displayName: "Install whatweb"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install whatweb -y
+                  displayName: "Install whatweb"
+
+      - deployment: Install_nmap
+        displayName: "Install nmap"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install nmap -y
+                  displayName: "Install nmap"
+
+      - deployment: Install_traceroute
+        displayName: "Install traceroute"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install traceroute -y
+                  displayName: "Install traceroute"
+
+      - deployment: Install_sqlmap
+        displayName: "Install sqlmap"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install sqlmap -y
+                  displayName: "Install sqlmap"
+
+      - deployment: Install_nikto
+        displayName: "Install nikto"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install nikto -y
+                  displayName: "Install nikto"
+
+      - deployment: Install_nuclei
+        displayName: "Install nuclei"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install nuclei -y
+                  displayName: "Install nuclei"
+
+      - deployment: Install_dnsenum
+        displayName: "Install dnsenum"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install dnsenum -y
+                  displayName: "Install dnsenum"
+
+      - deployment: Install_golang
+        displayName: "Install golang-go"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install golang-go -y
+                  displayName: "Install golang-go"
+
+      - deployment: Install_findomain
+        displayName: "Install findomain"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install findomain -y
+                  displayName: "Install findomain"
+
+      - deployment: Install_gobuster
+        displayName: "Install gobuster"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install gobuster -y
+                  displayName: "Install gobuster"
+
+      - deployment: Install_dirb
+        displayName: "Install dirb"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install dirb -y
+                  displayName: "Install dirb"
+
+      - deployment: Install_dirsearch
+        displayName: "Install dirsearch"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install dirsearch -y
+                  displayName: "Install dirsearch"
+
+      - deployment: Install_sslscan
+        displayName: "Install sslscan"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install sslscan -y
+                  displayName: "Install sslscan"
+
+      - deployment: Install_theharvester
+        displayName: "Install theharvester"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install theharvester -y
+                  displayName: "Install theharvester"
+
+      - deployment: Install_python3_pip
+        displayName: "Install python3-pip & setuptools"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install python3-pip -y
+                    sudo apt install python3-setuptools -y
+                  displayName: "Install python3-pip & setuptools"
+
+      - deployment: Install_commix
+        displayName: "Install commix"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install commix -y
+                  displayName: "Install commix"
+
+      - deployment: Install_dotdotpwn
+        displayName: "Install dotdotpwn"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install dotdotpwn -y
+                  displayName: "Install dotdotpwn"
+
+      - deployment: Install_Sublist3r
+        displayName: "Install Sublist3r"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install sublist3r -y
+                  displayName: "Install Sublist3r"
+
+      - deployment: Install_Wordlists
+        displayName: "Install Wordlists"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy: 
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    sudo apt install wordlists -y
+                  displayName: "Install wordlist"
+
+      # GIT CLONE & Sn1per install (keeps your previous approach)
+      - deployment: Install_Sn1per
+        displayName: "Clone & Install Sn1per"
+        environment:
+          name: Kali
+          resourceType: virtualMachine
+        dependsOn: Prepare
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "Cloning Sn1per and running installer..."
+                    mkdir -p /home/azureuser/github
+                    cd /home/azureuser/github
+                    if [ -d "Sn1per" ]; then
+                      echo "Sn1per already cloned, pulling latest..."
+                      cd Sn1per && git pull || true
+                    else
+                      git clone https://github.com/1N3/Sn1per.git
+                      cd Sn1per
+                    fi
+                    printf '\n' | sudo bash install.sh -y || echo "Sn1per installer exited with code $?"
+                  displayName: "Clone & run Sn1per installer"
