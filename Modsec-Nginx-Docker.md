@@ -1,38 +1,57 @@
 
 # NGINX with ModSecurity Docker Container
 
-This project provides a Docker container running NGINX with ModSecurity enabled. It includes building ModSecurity from source and allows mounting custom NGINX configuration files from the host.
+This repository provides a Docker container setup that runs NGINX with ModSecurity enabled. ModSecurity is installed from source during the container build, along with necessary dependencies.
 
 ---
 
-## Dockerfile Overview
+## Dockerfile
 
-- Base image: `nginx:latest`
-- Installs necessary build tools and dependencies
-- Copies and runs a ModSecurity install script (`modsecinstall.sh`)
-- Exposes port 80
-- Runs NGINX in the foreground
+```dockerfile
+# Base image: Official NGINX
+FROM nginx:latest
+
+# Install necessary build tools and dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential autoconf automake libtool pkg-config git wget curl \
+    zlib1g-dev libpcre2-dev libxml2-dev libcurl4-openssl-dev liblua5.3-dev \
+    libpcre2-dev libssl-dev libxslt1-dev libgd-dev libgeoip-dev \
+    libperl-dev libmaxminddb-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy and run the ModSecurity install script
+COPY modsecinstall.sh /home/modsecinstall.sh
+
+RUN chmod +x /home/modsecinstall.sh && \
+    /home/modsecinstall.sh
+
+# Optional: expose ports (default NGINX ports)
+EXPOSE 80
+
+# Default command
+CMD ["nginx", "-g", "daemon off;"]
+````
 
 ---
 
 ## Building the Docker Image
 
-Build the container image with the following command:
+Run this command in the directory containing your Dockerfile and `modsecinstall.sh`:
 
 ```bash
 docker build -t nginx-modsec .
-````
+```
 
 ---
 
 ## Running the Container with External Configs
 
-Assuming you have your NGINX config files on the host at:
+Assuming your host has NGINX configuration files here:
 
 * `~/nginx-config/nginx.conf`
 * `~/nginx-config/default.conf`
 
-Run the container with these configs mounted as read-only:
+Run the container with these configs mounted (read-only):
 
 ```bash
 docker run -d -p 80:80 \
@@ -42,16 +61,16 @@ docker run -d -p 80:80 \
   nginx-modsec
 ```
 
-* `:ro` makes the mounts read-only, which is safer for configs.
-* This overrides the container's default NGINX configuration with your custom configs.
+* `:ro` makes mounts read-only (safer for config files).
+* This will override the container's default configs with your custom ones.
 
 ---
 
-## Managing NGINX inside the Container
+## Managing NGINX Configuration Inside the Container
 
 ### Test Configuration
 
-To test your NGINX configuration inside the running container:
+To verify your configs inside the container:
 
 ```bash
 docker exec -it nginx-modsec-container nginx -t
@@ -59,7 +78,7 @@ docker exec -it nginx-modsec-container nginx -t
 
 ### Reload NGINX
 
-If the test is successful, reload NGINX with:
+After a successful test, reload NGINX to apply changes:
 
 ```bash
 docker exec nginx-modsec-container nginx -s reload
@@ -67,7 +86,7 @@ docker exec nginx-modsec-container nginx -s reload
 
 ---
 
-## Bonus: Shell Script to Test and Reload NGINX
+## Bonus: Quick Shell Script to Test and Reload NGINX
 
 Create a file named `nginx-reload.sh` with the following content:
 
@@ -93,6 +112,9 @@ Make it executable:
 chmod +x nginx-reload.sh
 ```
 
-Run it to safely test and reload NGINX inside your container.
+Run it anytime you want to safely test and reload NGINX inside the container:
 
----
+```bash
+./nginx-reload.sh
+```
+
