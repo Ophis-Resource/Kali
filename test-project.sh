@@ -304,3 +304,19 @@ echo "  http://<your-vm-ip>/        (should redirect to https)"
 echo -e "\n=== ALL DONE ==="
 
 exit 0
+
+
+# curl -i http://localhost:8000/
+# curl -i http://localhost/
+# curl -i http://localhost:8000/
+# curl -i http://localhost:8000/pages/About.html
+# curl -i http://localhost:8080/
+# curl -k -i https://localhost/
+# curl -k -i https://localhost/pages/About.html
+# curl -k -i https://localhost/api
+# curl -i http://localhost:8080/
+# curl -i http://localhost:8000/pages/About.html
+# curl -k -i https://localhost/
+# curl -k -i https://localhost/pages/About.html
+# curl -k -i https://localhost/api
+# curl -i http://localhost/
