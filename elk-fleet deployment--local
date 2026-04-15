@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+########################################
+# CONFIG
+########################################
+ES_PORT=9200
+KIBANA_PORT=5601
+NODE_NAME="node-1"
+CLUSTER_NAME="lab-cluster"
+HOST_IP=$(hostname -I | awk '{print $1}')
+
+log(){ echo -e "\n[+] $1\n"; }
+err(){ echo -e "\n[!] ERROR: $1\n"; exit 1; }
+
+[[ $EUID -ne 0 ]] && err "Run as root"
+
+########################################
+# FULL CLEAN
+########################################
+log "Full cleanup..."
+
+systemctl stop elasticsearch 2>/dev/null || true
+systemctl stop kibana 2>/dev/null || true
+
+apt purge -y elasticsearch kibana || true
+apt autoremove -y
+
+rm -rf /etc/elasticsearch
+rm -rf /var/lib/elasticsearch
+rm -rf /var/log/elasticsearch
+rm -rf /usr/share/elasticsearch
+
+rm -rf /etc/kibana
+rm -rf /var/lib/kibana
+rm -rf /var/log/kibana
+rm -rf /usr/share/kibana
+
+########################################
+# INSTALL
+########################################
+log "Installing dependencies..."
+
+apt update -y
+apt install -y curl gnupg jq apt-transport-https
+
+mkdir -p /usr/share/keyrings
+
+curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch \
+| gpg --dearmor -o /usr/share/keyrings/elastic.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/elastic.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" \
+> /etc/apt/sources.list.d/elastic-8.x.list
+
+apt update -y
+apt install -y elasticsearch kibana
+
+########################################
+# SYSTEM TUNING
+########################################
+log "System tuning..."
+
+sysctl -w vm.max_map_count=262144
+echo "vm.max_map_count=262144" > /etc/sysctl.d/99-elastic.conf
+
+########################################
+# CLEAN SECURITY (LAB MODE)
+########################################
+log "Removing auto security (lab mode)..."
+
+rm -f /etc/elasticsearch/elasticsearch.keystore
+rm -rf /etc/elasticsearch/certs
+
+########################################
+# CONFIG ELASTICSEARCH
+########################################
+log "Configuring Elasticsearch..."
+
+cat > /etc/elasticsearch/elasticsearch.yml <<EOF
+cluster.name: ${CLUSTER_NAME}
+node.name: ${NODE_NAME}
+
+network.host: 0.0.0.0
+http.port: ${ES_PORT}
+
+path.data: /var/lib/elasticsearch
+path.logs: /var/log/elasticsearch
+
+discovery.type: single-node
+
+xpack.security.enabled: false
+EOF
+
+########################################
+# JVM HEAP
+########################################
+log "Setting JVM heap..."
+
+mkdir -p /etc/elasticsearch/jvm.options.d
+
+cat > /etc/elasticsearch/jvm.options.d/heap.options <<EOF
+-Xms512m
+-Xmx512m
+EOF
+
+########################################
+# FIX PERMISSIONS (CRITICAL FIX)
+########################################
+log "Fixing permissions (critical)..."
+
+mkdir -p /var/lib/elasticsearch /var/log/elasticsearch
+
+chown -R elasticsearch:elasticsearch /etc/elasticsearch
+chown -R elasticsearch:elasticsearch /var/lib/elasticsearch
+chown -R elasticsearch:elasticsearch /var/log/elasticsearch
+
+chmod 750 /etc/elasticsearch
+
+########################################
+# START ELASTICSEARCH
+########################################
+log "Starting Elasticsearch..."
+
+systemctl daemon-reload
+systemctl enable elasticsearch
+systemctl restart elasticsearch
+
+sleep 20
+
+########################################
+# VERIFY ELASTICSEARCH
+########################################
+log "Testing Elasticsearch..."
+
+if ! curl -s http://127.0.0.1:${ES_PORT} | grep -q "cluster_name"; then
+  err "Elasticsearch failed → check logs"
+fi
+
+log "Elasticsearch is UP"
+
+########################################
+# CONFIGURE KIBANA
+########################################
+log "Configuring Kibana..."
+
+cat > /etc/kibana/kibana.yml <<EOF
+server.port: ${KIBANA_PORT}
+server.host: "0.0.0.0"
+
+elasticsearch.hosts: ["http://127.0.0.1:${ES_PORT}"]
+
+xpack.encryptedSavedObjects.encryptionKey: "0123456789abcdef0123456789abcdef"
+EOF
+
+########################################
+# FIX KIBANA PERMISSIONS
+########################################
+chown -R kibana:kibana /etc/kibana
+
+########################################
+# START KIBANA
+########################################
+log "Starting Kibana..."
+
+systemctl enable kibana
+systemctl restart kibana
+
+sleep 20
+
+########################################
+# INSTALL ELASTIC AGENT
+########################################
+########################################
+# INSTALL ELASTIC AGENT (FIXED)
+########################################
+log "Installing Elastic Agent..."
+
+cd /tmp
+
+AGENT_FILE="elastic-agent-8.19.14-linux-x86_64.tar.gz"
+AGENT_URL="https://artifacts.elastic.co/downloads/beats/elastic-agent/${AGENT_FILE}"
+
+# Clean old files (idempotent)
+rm -rf elastic-agent-* ${AGENT_FILE}
+
+# Download
+curl -L -o ${AGENT_FILE} ${AGENT_URL}
+
+# Validate download
+if [[ ! -f "${AGENT_FILE}" ]]; then
+  err "Elastic Agent download failed"
+fi
+
+# Extract (CORRECT WAY)
+tar -xzf ${AGENT_FILE}
+
+# Enter directory safely
+cd elastic-agent-8.19.14-linux-x86_64 || err "Extraction failed"
+
+# Install
+./elastic-agent install \
+  --url=http://127.0.0.1:${ES_PORT} \
+  --insecure -f || true
+########################################
+# DONE
+########################################
+log "Deployment Complete"
+
+echo "Elasticsearch: http://${HOST_IP}:${ES_PORT}"
+echo "Kibana:        http://${HOST_IP}:${KIBANA_PORT}"
