@@ -1,0 +1,211 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+########################################
+# CONFIG (ADJUST THESE)
+########################################
+
+MODE="${MODE:-local}"   # local | letsencrypt | custom-cert
+
+DOMAIN="elk.local"
+EMAIL="admin@local"
+
+ES_PORT=9200
+KIBANA_PORT=5601
+FLEET_PORT=8220
+
+CLUSTER_NAME="prod-elk"
+NODE_NAME="$(hostname)"
+
+WORKDIR="/opt/elk-deploy"
+
+########################################
+# HELPERS
+########################################
+
+log(){ echo -e "\n[+] $1\n"; }
+err(){ echo -e "\n[!] $1\n"; exit 1; }
+
+[[ $EUID -ne 0 ]] && err "Run as root"
+
+mkdir -p "$WORKDIR"
+
+########################################
+# PHASE 1 — BASE OS PREPARATION
+########################################
+log "PHASE 1: System preparation"
+
+apt update -y
+apt install -y curl wget gnupg apt-transport-https jq ca-certificates openssl nginx
+
+sysctl -w vm.max_map_count=262144
+echo "vm.max_map_count=262144" > /etc/sysctl.d/99-elastic.conf
+
+########################################
+# ELASTIC REPO
+########################################
+log "Adding Elastic repository"
+
+mkdir -p /usr/share/keyrings
+
+curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch \
+ | gpg --dearmor -o /usr/share/keyrings/elastic.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/elastic.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" \
+ > /etc/apt/sources.list.d/elastic-8.x.list
+
+apt update -y
+
+########################################
+# PHASE 2 — ELASTICSEARCH (SECURE BY DEFAULT)
+########################################
+log "PHASE 2: Elasticsearch install"
+
+apt install -y elasticsearch
+
+HEAP_MB=$(( $(grep MemTotal /proc/meminfo | awk '{print $2}') / 2048 ))
+
+cat > /etc/elasticsearch/jvm.options.d/heap.options <<EOF
+-Xms${HEAP_MB}m
+-Xmx${HEAP_MB}m
+EOF
+
+cat > /etc/elasticsearch/elasticsearch.yml <<EOF
+cluster.name: ${CLUSTER_NAME}
+node.name: ${NODE_NAME}
+
+network.host: 127.0.0.1
+http.port: ${ES_PORT}
+
+discovery.type: single-node
+
+xpack.security.enabled: true
+xpack.security.enrollment.enabled: true
+xpack.security.http.ssl.enabled: false
+EOF
+
+systemctl enable elasticsearch
+systemctl restart elasticsearch
+
+########################################
+# WAIT FOR ES
+########################################
+log "Waiting for Elasticsearch"
+
+until curl -s "http://127.0.0.1:${ES_PORT}" >/dev/null; do
+  sleep 5
+done
+
+########################################
+# GENERATE PASSWORDS
+########################################
+log "Setting credentials"
+
+ELASTIC_PASS=$(/usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -b -s)
+KIBANA_PASS=$(/usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system -b -s)
+
+echo "$ELASTIC_PASS" > /root/elastic.pass
+chmod 600 /root/elastic.pass
+
+########################################
+# PHASE 3 — KIBANA + FLEET ENABLEMENT
+########################################
+log "PHASE 3: Kibana + Fleet"
+
+apt install -y kibana
+
+cat > /etc/kibana/kibana.yml <<EOF
+server.port: ${KIBANA_PORT}
+server.host: "127.0.0.1"
+
+elasticsearch.hosts: ["http://127.0.0.1:${ES_PORT}"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "${KIBANA_PASS}"
+
+xpack.fleet.enabled: true
+xpack.encryptedSavedObjects.encryptionKey: "$(openssl rand -hex 32)"
+EOF
+
+systemctl enable kibana
+systemctl restart kibana
+
+########################################
+# PHASE 4 — FLEET SERVER (EDR CORE)
+########################################
+log "PHASE 4: Fleet Server install"
+
+cd "$WORKDIR"
+rm -rf elastic-agent*
+
+AGENT_TAR="elastic-agent-8.19.14-linux-x86_64.tar.gz"
+curl -L -o "$AGENT_TAR" \
+https://artifacts.elastic.co/downloads/beats/elastic-agent/${AGENT_TAR}
+
+tar -xzf "$AGENT_TAR"
+cd elastic-agent-*/
+
+# NOTE: in real production, enrollment token comes from Kibana API
+# placeholder assumes manual token generation step
+echo "IMPORTANT: Create Fleet Server policy + enrollment token in Kibana UI"
+
+########################################
+# PHASE 5 — NGINX REVERSE PROXY
+########################################
+log "PHASE 5: Nginx proxy"
+
+cat > /etc/nginx/sites-available/kibana <<EOF
+server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    location / {
+        proxy_pass http://127.0.0.1:${KIBANA_PORT};
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/kibana /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+
+nginx -t
+systemctl restart nginx
+
+########################################
+# PHASE 6 — DETECTION RULE BOOTSTRAP (BASIC API READY)
+########################################
+log "PHASE 6: Detection rules placeholder"
+
+# Example rule seed (FAILED LOGIN - Windows Event ID 4625)
+cat > "$WORKDIR/failed_login_rule.json" <<EOF
+{
+  "name": "Windows Failed Logins",
+  "risk_score": 50,
+  "severity": "medium",
+  "type": "query",
+  "query": "event.code:4625"
+}
+EOF
+
+########################################
+# FINAL OUTPUT
+########################################
+
+IP=$(hostname -I | awk '{print $1}')
+
+echo ""
+echo "=============================="
+echo " ELK + FLEET BASE DEPLOYED"
+echo "=============================="
+echo "Kibana: http://${IP}:${KIBANA_PORT}"
+echo "Elastic password: /root/elastic.pass"
+echo ""
+echo "NEXT STEPS (MANDATORY):"
+echo "1. Open Kibana → Fleet"
+echo "2. Create Fleet Server policy"
+echo "3. Generate enrollment token"
+echo "4. Start Fleet Server manually OR extend script"
+echo "5. Add Windows/Linux agent policies"
+echo "6. Enable Security Detection rules"
+echo ""
