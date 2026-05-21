@@ -13,6 +13,7 @@ echo "System update and upgrade complete!"
 EOF'
 sudo chmod +x /usr/local/bin/kaliup
 echo "'kaliup' command created successfully!"
+kaliup
 
 # Update sources.list
 echo "################################################################################################"
